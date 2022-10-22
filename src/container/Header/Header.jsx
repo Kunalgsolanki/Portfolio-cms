@@ -1,9 +1,10 @@
-import React from 'react';
+import React,{useEffect, useState}   from 'react';
 import { motion } from 'framer-motion';
-
-
+import {AppWrap}from "../../Wrapper"
 import { images } from '../../constants';
 import './Header.scss';
+import { urlFor, client } from '../../client';
+
 
 const scaleVariants = {
   whileInView: {
@@ -16,39 +17,88 @@ const scaleVariants = {
   },
 };
 
-const Header = () => (
-  <div className="app__header app__flex">
+
+const Header = () => {
+
+ const[kgs, setKgs]= useState([])
+ 
+ 
+  
+ useEffect(() => {
+  const query = '*[_type == "Self"]';
+
+  client.fetch(query).then((data) => {
+    setKgs(data);
+  });
+}, []);
+  
+  return (
+    <>
+    
+    <div className="app__header app__flex">
     <motion.div
       whileInView={{ x: [-100, 0], opacity: [0, 1] }}
       transition={{ duration: 0.5 }}
       className="app__header-info"
+      
     >
       <div className="app__header-badge">
         <div className="badge-cmp app__flex">
           <span>👋</span>
           <div style={{ marginLeft: 20 }}>
             <p className="p-text">Hello, I am</p>
-            <h1 className="head-text">Mithil</h1>
+           
+
+            {
+              kgs.map((kgs, index)=>(
+
+                    <h1   key ={kgs+ index}className="head-text"> {kgs.name}</h1> 
+
+              ))
+            }
           </div>
         </div>
 
         <div className="tag-cmp app__flex">
-          <p className="p-text">Web Developer</p>
+          {/* <p className="p-text"> Developer</p>
           <p className="p-text">Freelancer</p>
+          <p className="p-text">Freelancer</p> */}
+
+         {
+
+
+kgs.map((kgs, index)=>(
+         <div>
+
+
+      
+        <p className="p-text"  key={kgs+index}> {kgs.profession}</p>
+          <p className="p-text" key={kgs+index}>{kgs.pf}</p>
+           
+
+          </div>
+))
+         }
+
         </div>
 
         
       </div>
     </motion.div>
 
-    
+  
+   {
 
-    <motion.div
+     kgs.map((kgs,index)=>(
+
+      <motion.div
       whileInView={{ opacity: [0, 1] }}
       transition={{ duration: 0.5, delayChildren: 0.5 }}
+      key={kgs.name +index}
       className="app__header-img"
     >
-      <img src={images.profile1} alt="profile_bg" />
+      <img src={urlFor(kgs.imgUrl)} alt={kgs.title} />
+
       <motion.img
         whileInView={{ scale: [0, 1] }}
         transition={{ duration: 1, ease: 'easeInOut' }}
@@ -57,19 +107,33 @@ const Header = () => (
         className="overlay_circle"
       />
     </motion.div>
+      
+     ))
+   }
+   
 
     <motion.div
       variants={scaleVariants}
       whileInView={scaleVariants.whileInView}
       className="app__header-circles"
     >
-      {[images.flutter, images.redux, images.sass].map((circle, index) => (
+      {[images.python, images.amazon,images.graphql].map((circle, index) => (
         <div className="circle-cmp app__flex" key={`circle-${index}`}>
           <img src={circle} alt="profile_bg" />
         </div>
       ))}
     </motion.div>
   </div>
-);
+    
+    </>
+  );
 
-export default Header
+  
+   
+
+
+
+ 
+};
+
+export default AppWrap(Header,'home')

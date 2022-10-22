@@ -1,28 +1,39 @@
-import React, { useState } from 'react'
-import "./Navbar.scss";
-import {HiMenuAlt4 , HiX}  from "react-icons/hi"
-import {images} from "../../constants";
+import React, { useState ,useEffect} from 'react';
+import { HiMenuAlt4, HiX } from 'react-icons/hi';
 import { motion } from 'framer-motion';
+import { urlFor, client } from '../../client';
+
+
+import './Navbar.scss';
+
 const Navbar = () => {
- const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(false);
+  const [name,setName] = useState([]);
+
+   
+ useEffect(() => {
+  const query = '*[_type == "Self"]';
+
+  client.fetch(query).then((data) => {
+    setName(data);
+  });
+}, []);
+
   return (
-     <nav  className="app__navbar">
-
-      <div className="app__navbar-logo" >
-
-         <img src={images.logo} />
+    <nav className="app__navbar">
+      <div className="app__navbar-logo">
+      {name.map((name , index)=>(
+          <h3 className='head-text' style={{color:"cyan"}}> 
+           {name.sl}
+                     </h3>
+       ))}
       </div>
-      <ul className='app__navbar-links'>
-
-        { ['home', 'about','work','skills','contact'].map((item)=>(
-    <li className="app__flex p-text" key={`link-${item}`}>  
-    
-     <div/>
-
-     <a   href={`#${item}`}> {item} </a>
-    
-    </li>
-
+      <ul className="app__navbar-links">
+        {['home', 'about', 'work', 'skills', 'contact'].map((item) => (
+          <li className="app__flex p-text" key={`link-${item}`}>
+            <div />
+            <a href={`#${item}`}>{item}</a>
+          </li>
         ))}
       </ul>
 
@@ -31,7 +42,7 @@ const Navbar = () => {
 
         {toggle && (
           <motion.div
-            whileInView={{ x: [300, 0] }}
+            whileInView={{ x: [100, 0] }}
             transition={{ duration: 0.85, ease: 'easeOut' }}
           >
             <HiX onClick={() => setToggle(false)} />
@@ -47,8 +58,8 @@ const Navbar = () => {
           </motion.div>
         )}
       </div>
-     </nav>
-  )
-}
+    </nav>
+  );
+};
 
-export default Navbar
+export default Navbar;

@@ -1,6 +1,8 @@
 import React from 'react'
 import "./App.scss"
-import {About, Footer , Header, Skills ,Test , Works } from "./container";
+
+
+import {About, Footer , Header, Skills ,TestMonomials , Works } from "./container";
 import {Navbar} from "./components"
 const App = () => {
   return (
@@ -10,7 +12,7 @@ const App = () => {
        <About/>
        <Works/>
        <Skills/>
-       <Test/>
+       <TestMonomials/>
        <Footer/>
       
     </div>
